@@ -1,0 +1,600 @@
+basePath: /api/v1
+definitions:
+  Content:
+    properties:
+      aspect_ratio:
+        type: string
+      category:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      play_time:
+        type: string
+      resolution:
+        type: string
+      tag:
+        type: string
+      thumbnail:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  ErrorResponse:
+    properties:
+      code:
+        type: string
+      debug_message:
+        type: string
+    type: object
+  ListTodo:
+    properties:
+      content:
+        type: string
+      createdAt:
+        type: string
+      id:
+        type: integer
+      title:
+        type: string
+      username:
+        type: string
+    required:
+    - content
+    - title
+    type: object
+  RequestLogin:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  Response:
+    properties:
+      data: {}
+      message:
+        type: string
+    type: object
+  User:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      email:
+        type: string
+      id:
+        type: integer
+      updatedAt:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - username
+    type: object
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server celler server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Swagger Example API
+  version: "1.0"
+paths:
+  /contents:
+    get:
+      consumes:
+      - application/json
+      description: content
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Content'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: content
+      tags:
+      - Content
+    post:
+      consumes:
+      - application/json
+      description: content
+      parameters:
+      - description: string
+        in: formData
+        maxLength: 30
+        minLength: 1
+        name: Name
+        required: true
+        type: string
+      - description: file
+        in: formData
+        name: Thumbnail
+        required: true
+        type: file
+      - description: string
+        in: formData
+        maxLength: 500
+        minLength: 0
+        name: Description
+        type: string
+      - description: string
+        in: formData
+        maxLength: 500
+        minLength: 0
+        name: PlayTime
+        type: string
+      - description: string
+        in: formData
+        maxLength: 500
+        minLength: 0
+        name: Resolution
+        type: string
+      - description: string
+        in: formData
+        maxLength: 500
+        minLength: 0
+        name: AspectRatio
+        type: string
+      - description: string
+        in: formData
+        maxLength: 500
+        minLength: 0
+        name: Tag
+        type: string
+      - description: string
+        in: formData
+        maxLength: 500
+        minLength: 0
+        name: Category
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: content
+      tags:
+      - Content
+  /gg-storage:
+    post:
+      consumes:
+      - application/json
+      description: google storage
+      parameters:
+      - description: file
+        in: formData
+        name: File
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: upload file to google storage
+      tags:
+      - Google-storage
+  /gg-storage/{name}:
+    delete:
+      consumes:
+      - application/json
+      description: delete file in google storage
+      parameters:
+      - description: file
+        in: formData
+        name: File
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: delete file in google storage
+      tags:
+      - Google-storage
+    get:
+      consumes:
+      - application/json
+      description: download file in google storage
+      parameters:
+      - description: file
+        in: formData
+        name: File
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: download file from Google storage
+      tags:
+      - Google-storage
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: login
+      parameters:
+      - description: Body
+        in: body
+        name: json
+        required: true
+        schema:
+          $ref: '#/definitions/RequestLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: login
+      tags:
+      - Auth
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: register
+      parameters:
+      - description: Body
+        in: body
+        name: json
+        required: true
+        schema:
+          type: object
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      summary: register
+      tags:
+      - Auth
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: get list users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/User'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - Bearer: []
+      summary: get list users
+      tags:
+      - User
+    post:
+      consumes:
+      - application/json
+      description: Create a user
+      parameters:
+      - in: formData
+        name: createdAt
+        type: string
+      - in: formData
+        name: email
+        required: true
+        type: string
+      - in: formData
+        name: id
+        type: integer
+      - in: formData
+        name: updatedAt
+        type: string
+      - in: formData
+        name: username
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - Bearer: []
+      summary: create a user
+      tags:
+      - User
+  /users/{id}:
+    get:
+      consumes:
+      - application/json
+      description: Get a user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - Bearer: []
+      summary: Get a user
+      tags:
+      - User
+  /users/current:
+    get:
+      consumes:
+      - application/json
+      description: Get current user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - BearerAuth: []
+      summary: Get current user
+      tags:
+      - User
+  /users/todo:
+    delete:
+      consumes:
+      - application/json
+      description: delete todo
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - Bearer: []
+      summary: delete todo
+      tags:
+      - Todo
+    get:
+      consumes:
+      - application/json
+      description: create todo
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - Bearer: []
+      summary: create todo
+      tags:
+      - Todo
+    patch:
+      consumes:
+      - application/json
+      description: update todo
+      parameters:
+      - description: Todo ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - Bearer: []
+      summary: update todo
+      tags:
+      - Todo
+    post:
+      consumes:
+      - application/json
+      description: list todo
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/ListTodo'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/ErrorResponse'
+      security:
+      - Bearer: []
+      summary: list todo
+      tags:
+      - Todo
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
