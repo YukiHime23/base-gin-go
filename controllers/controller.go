@@ -1,10 +1,11 @@
 package controller
 
 import (
-	"github.com/google/uuid"
+	"base-gin-go/pkg/apierrors"
 	"mime/multipart"
 	"path/filepath"
-	"peanut/pkg/apierrors"
+
+	"github.com/google/uuid"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"

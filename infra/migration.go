@@ -1,16 +1,15 @@
 package infra
 
 import (
-	"gorm.io/gorm"
+	"base-gin-go/models"
 	"log"
-	"peanut/domain"
+
+	"gorm.io/gorm"
 )
 
 func Migration(db *gorm.DB) {
 	err := db.AutoMigrate(
-		&domain.User{},
-		&domain.Todo{},
-		&domain.Content{},
+		&models.User{},
 	)
 	if err != nil {
 		log.Fatal(err)

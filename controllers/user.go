@@ -1,25 +1,19 @@
 package controller
 
 import (
-	"peanut/domain"
-	"peanut/pkg/jwt"
-	"peanut/pkg/response"
-	"peanut/repository"
-	"peanut/usecase"
+	"base-gin-go/pkg/response"
+	"base-gin-go/services"
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 type UserController struct {
-	Usecase usecase.UserUsecase
+	service services.UserServicer
 }
 
-func NewUserController(db *gorm.DB) *UserController {
-	return &UserController{
-		Usecase: usecase.NewUserUsecase(repository.NewUserRepo(db)),
-	}
+func NewUserController(s services.UserServicer) *UserController {
+	return &UserController{service: s}
 }
 
 // Login godoc
@@ -34,19 +28,19 @@ func NewUserController(db *gorm.DB) *UserController {
 //	@Failure		400		{object}	domain.ErrorResponse
 //	@Failure		500		{object}	domain.ErrorResponse
 //	@Router			/login [post]
-func (c *UserController) Login(ctx *gin.Context) {
-	req := domain.RequestLogin{}
-	if !bindJSON(ctx, &req) {
-		return
-	}
-	token, err := c.Usecase.Login(ctx, req)
-	if checkError(ctx, err) {
-		return
-	}
-	response.OK(ctx, gin.H{
-		"token": "Bearer " + token,
-	})
-}
+// func (c *UserController) Login(ctx *gin.Context) {
+// 	req := domain.RequestLogin{}
+// 	if !bindJSON(ctx, &req) {
+// 		return
+// 	}
+// 	token, err := c.Usecase.Login(ctx, req)
+// 	if checkError(ctx, err) {
+// 		return
+// 	}
+// 	response.OK(ctx, gin.H{
+// 		"token": "Bearer " + token,
+// 	})
+// }
 
 // GetUsers godoc
 //
@@ -61,13 +55,13 @@ func (c *UserController) Login(ctx *gin.Context) {
 //	@Failure		500	{object}	domain.ErrorResponse
 //	@Security		Bearer
 //	@Router			/users [get]
-func (c *UserController) GetUsers(ctx *gin.Context) {
-	users, err := c.Usecase.GetUsers(ctx)
-	if checkError(ctx, err) {
-		return
-	}
-	response.OK(ctx, users)
-}
+// func (c *UserController) GetUsers(ctx *gin.Context) {
+// 	users, err := c.Usecase.GetUsers(ctx)
+// 	if checkError(ctx, err) {
+// 		return
+// 	}
+// 	response.OK(ctx, users)
+// }
 
 // CurrentUser godoc
 //
@@ -82,19 +76,19 @@ func (c *UserController) GetUsers(ctx *gin.Context) {
 //	@Failure		500	{object}	domain.ErrorResponse
 //	@Security		BearerAuth
 //	@Router			/users/current [get]
-func (c *UserController) CurrentUser(ctx *gin.Context) {
-	userID, err := jwt.ExtractTokenID(ctx)
-	if checkError(ctx, err) {
-		return
-	}
+// func (c *UserController) CurrentUser(ctx *gin.Context) {
+// 	userID, err := jwt.ExtractTokenID(ctx)
+// 	if checkError(ctx, err) {
+// 		return
+// 	}
 
-	u, err := c.Usecase.GetUser(ctx, userID)
-	if checkError(ctx, err) {
-		return
-	}
+// 	u, err := c.Usecase.GetUser(ctx, userID)
+// 	if checkError(ctx, err) {
+// 		return
+// 	}
 
-	response.OK(ctx, u)
-}
+// 	response.OK(ctx, u)
+// }
 
 // GetUser godoc
 //
@@ -115,7 +109,7 @@ func (c *UserController) GetUser(ctx *gin.Context) {
 	if checkError(ctx, err) {
 		return
 	}
-	user, err := c.Usecase.GetUser(ctx, id)
+	user, err := c.service.GetUser(ctx, id)
 	if checkError(ctx, err) {
 		return
 	}
@@ -135,18 +129,18 @@ func (c *UserController) GetUser(ctx *gin.Context) {
 //	@Failure		500		{object}	domain.ErrorResponse
 //	@Security		Bearer
 //	@Router			/users [post]
-func (c *UserController) CreateUser(ctx *gin.Context) {
-	user := domain.User{}
-	if !bindJSON(ctx, &user) {
-		return
-	}
+// func (c *UserController) CreateUser(ctx *gin.Context) {
+// 	user := domain.User{}
+// 	if !bindJSON(ctx, &user) {
+// 		return
+// 	}
 
-	err := c.Usecase.CreateUser(ctx, user)
-	if checkError(ctx, err) {
-		return
-	}
-	response.OK(ctx, nil)
-}
+// 	err := c.Usecase.CreateUser(ctx, user)
+// 	if checkError(ctx, err) {
+// 		return
+// 	}
+// 	response.OK(ctx, nil)
+// }
 
 // Register godoc
 //
@@ -160,15 +154,15 @@ func (c *UserController) CreateUser(ctx *gin.Context) {
 //	@Failure		400		{object}	domain.ErrorResponse
 //	@Failure		500		{object}	domain.ErrorResponse
 //	@Router			/register [post]
-func (c *UserController) Register(ctx *gin.Context) {
-	user := domain.User{}
-	if !bindJSON(ctx, &user) {
-		return
-	}
+// func (c *UserController) Register(ctx *gin.Context) {
+// 	user := domain.User{}
+// 	if !bindJSON(ctx, &user) {
+// 		return
+// 	}
 
-	err := c.Usecase.CreateUser(ctx, user)
-	if checkError(ctx, err) {
-		return
-	}
-	response.OK(ctx, nil)
-}
+// 	err := c.Usecase.CreateUser(ctx, user)
+// 	if checkError(ctx, err) {
+// 		return
+// 	}
+// 	response.OK(ctx, nil)
+// }

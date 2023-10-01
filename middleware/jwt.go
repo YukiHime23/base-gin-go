@@ -1,9 +1,10 @@
 package middleware
 
 import (
-	"github.com/gin-gonic/gin"
+	"base-gin-go/pkg/jwt"
 	"net/http"
-	"peanut/pkg/jwt"
+
+	"github.com/gin-gonic/gin"
 )
 
 func JwtAuthMiddleware() gin.HandlerFunc {

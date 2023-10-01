@@ -1,11 +1,12 @@
-package config
+package config_godotenv
 
 import (
 	"fmt"
-	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"regexp"
+
+	"github.com/joho/godotenv"
 )
 
 func init() {
@@ -17,7 +18,7 @@ func Setup() {
 	fmt.Println("Initial configuration")
 }
 
-var projectDirName = "peanut"
+var projectDirName = "base-gin-go"
 
 func loadEnv() {
 	projectName := regexp.MustCompile("^(.*" + projectDirName + ")")

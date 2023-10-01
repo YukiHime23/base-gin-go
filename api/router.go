@@ -1,17 +1,17 @@
-package infra
+package api
 
 import (
+	controller "base-gin-go/controllers"
+	"base-gin-go/middleware"
+	"base-gin-go/services"
 	"net/http"
-	"peanut/middleware"
 	"time"
-
-	"peanut/controller"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 
-	_ "peanut/docs"
+	_ "base-gin-go/docs"
 
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -22,7 +22,7 @@ type Server struct {
 	Store  *gorm.DB
 }
 
-func SetupServer(s *gorm.DB) Server {
+func SetupServer(db *gorm.DB) Server {
 	// Init router
 	r := gin.New()
 	r.MaxMultipartMemory = 8 >> 20
@@ -53,41 +53,40 @@ func SetupServer(s *gorm.DB) Server {
 	// Config route
 	v1 := r.Group("api/v1")
 	{
-		userCtrl := controller.NewUserController(s)
-		todoCtrl := controller.NewTodoController(s)
-		contentCtrl := controller.NewContentController(s)
+		ser := services.NewAppService(db)
+		userCtrl := controller.NewUserController(ser)
 
-		v1.POST("login", userCtrl.Login)
-		v1.POST("register", userCtrl.CreateUser)
+		// v1.POST("login", userCtrl.Login)
+		// v1.POST("register", userCtrl.CreateUser)
 
 		users := v1.Group("/users")
 		{
 			users.Use(middleware.JwtAuthMiddleware())
 
-			users.GET("current", userCtrl.CurrentUser)
-			users.GET("", userCtrl.GetUsers)
+			// users.GET("current", userCtrl.CurrentUser)
+			// users.GET("", userCtrl.GetUsers)
 			users.GET("/:id", userCtrl.GetUser)
-			users.POST("", userCtrl.CreateUser)
+			// users.POST("", userCtrl.CreateUser)
 			// users.PATCH("/:id", userCtrl.UpdateUser)
 			// users.DELETE("/:id", userCtrl.DeleteUserByID)
 
-			todo := users.Group("/todo")
-			{
-				todo.GET("", todoCtrl.ListTodo)
-				todo.POST("", todoCtrl.CreateTodo)
-				todo.PATCH("/:id", todoCtrl.UpdateTodo)
-				todo.DELETE("/:id", todoCtrl.DeleteTodo)
-			}
+			// todo := users.Group("/todo")
+			// {
+			// 	todo.GET("", todoCtrl.ListTodo)
+			// 	todo.POST("", todoCtrl.CreateTodo)
+			// 	todo.PATCH("/:id", todoCtrl.UpdateTodo)
+			// 	todo.DELETE("/:id", todoCtrl.DeleteTodo)
+			// }
 		}
 
-		contents := v1.Group("/contents")
-		{
-			contents.GET("", contentCtrl.ListContent)
-			contents.POST("", contentCtrl.CreateContent)
-		}
-		v1.POST("gg-storage", contentCtrl.GgStorage)
-		v1.GET("gg-storage/download/:name", contentCtrl.Download)
-		v1.DELETE("gg-storage/:name", contentCtrl.DeleteGCS)
+		// contents := v1.Group("/contents")
+		// {
+		// 	contents.GET("", contentCtrl.ListContent)
+		// 	contents.POST("", contentCtrl.CreateContent)
+		// }
+		// v1.POST("gg-storage", contentCtrl.GgStorage)
+		// v1.GET("gg-storage/download/:name", contentCtrl.Download)
+		// v1.DELETE("gg-storage/:name", contentCtrl.DeleteGCS)
 	}
 
 	// health check
@@ -100,7 +99,7 @@ func SetupServer(s *gorm.DB) Server {
 	//}
 
 	return Server{
-		Store:  s,
+		Store:  db,
 		Router: r,
 	}
 }

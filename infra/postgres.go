@@ -1,20 +1,22 @@
 package infra
 
 import (
+	config_caarlos0_env "base-gin-go/config/caarlos0-env"
+	"context"
 	"fmt"
-	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func PostgresOpen() (db *gorm.DB, err error) {
-	user := os.Getenv("DB_USER")
-	password := os.Getenv("DB_PASSWORD")
-	host := os.Getenv("DB_HOST")
-	port := os.Getenv("DB_PORT")
-	dbname := os.Getenv("DB_NAME")
-	dsn := fmt.Sprintf("host=%s user=%s password=%s database=%s port=%s sslmode=disable", host, user, password, dbname, port)
+func PostgresOpen(ctx context.Context, cfg *config_caarlos0_env.Config) (db *gorm.DB, err error) {
+	dsn := fmt.Sprintf("host=%s user=%s password=%s database=%s port=%v sslmode=disable",
+		cfg.DBHost,
+		cfg.DBUser,
+		cfg.DBPassword,
+		cfg.DBName,
+		cfg.DBPort,
+	)
 
 	db, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 

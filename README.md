@@ -13,37 +13,43 @@ cp .env.example .env
 - Update `.env`
 
 ## Rules
-- `domain`: entities defination
-- `controller`: binding data, validation
-- `usecase`: write business logic
-- `resository`: get data from storage (DB, firebase, bigquery,..)
+- `models`: entities defination
+- `controllers`: binding data, validation
+- `services`: write business logic
+- `resositories`: get data from storage (DB, firebase, bigquery,..)
 - `config`: setup or read configuration variables
 - `pkg`: internal package
 
 ## Unit test
-- Setup gomock:\
-  `$ go install github.com/golang/mock/mockgen@v1.6.0`
-- Generate mock repository:\
-  `$ mockgen -source repository/user.go -package mock -destination repository/mock/user.go`
+- Setup gomock:
+```
+go install github.com/golang/mock/mockgen@v1.6.0
+```
+- Generate mock repository:
+```
+mockgen -source repositories/user.go -package mock -destination repositories/mock/user.go
+```
 
 - Setup ginkgo:
 ```
-$ go install github.com/onsi/ginkgo/v2/ginkgo
-$ go get github.com/onsi/gomega/...
+go get github.com/onsi/ginkgo/v2/ginkgo
+```
+```
+go get github.com/onsi/gomega/...
 ```
 - Create test suite:
 ```
-$ cd to/pkg/is/tested
-$ ginkgo bootstrap
-$ ginkgo generate %FILENAME%
+cd to/pkg/is/tested
+ginkgo bootstrap
+ginkgo generate %FILENAME%
 ```
 - Run test:
 ```
-$ ginkgo ./usecase
+ginkgo ./usecase
 // or
-$ go test ./usecase
+go test ./usecase
 // or run all test in project
-$ ginkgo ./...
+ginkgo ./...
 ```
 
 ## DB Migration
@@ -64,18 +70,9 @@ $ ginkgo ./...
     ```
 
 ## Use
-- hash password\
-```go get golang.org/x/crypto/bcrypt```
-- testcase\
-```go install github.com/golang/mock/mockgen@v1.6.0```
-- jwt\
-```go get -u github.com/golang-jwt/jwt/v4```
-
-
-
-```
-go get -u github.com/gin-gonic/gin
-```
-```
-go install github.com/cosmtrek/air@latest
-```
+- gin-gonic
+- air
+- gorm
+- crypto/bcrypt
+- mockgen 1.6.0
+- jwt v4

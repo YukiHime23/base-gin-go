@@ -1,8 +1,8 @@
 package response
 
 import (
+	"base-gin-go/models"
 	"net/http"
-	"peanut/domain"
 
 	"github.com/gin-gonic/gin"
 )
@@ -16,7 +16,7 @@ func WithStatusCode(ctx *gin.Context, code int, data interface{}) {
 }
 
 func response(ctx *gin.Context, code int, data interface{}) {
-	ctx.JSON(code, domain.Response{
+	ctx.JSON(code, models.Response{
 		Message: http.StatusText(code),
 		Data:    data,
 	})

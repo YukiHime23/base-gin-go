@@ -1,14 +1,15 @@
 package main
 
 import (
+	"base-gin-go/api"
+	config_caarlos0_env "base-gin-go/config/caarlos0-env"
+	config_godotenv "base-gin-go/config/godotenv"
+	"base-gin-go/infra"
+	"base-gin-go/middleware"
+	"base-gin-go/pkg/i18n"
+	"context"
 	"fmt"
 	"log"
-	"peanut/config"
-	"peanut/infra"
-	"peanut/middleware"
-	"peanut/pkg/i18n"
-
-	"gorm.io/gorm"
 )
 
 //	@title			Swagger Example API
@@ -32,24 +33,25 @@ import (
 func main() {
 	fmt.Println("---- Hello world! ----")
 
-	config.Setup()
+	config_godotenv.Setup()
+
+	cfg, err := config_caarlos0_env.New()
+	if err != nil {
+		log.Fatal("Load env fail")
+	}
+
 	i18n.SetupI18n()
 	middleware.ValidateFunction()
 
-	dbClient := dbConnect()
-	server := infra.SetupServer(dbClient)
-	infra.Migration(dbClient)
-
-	err := server.Router.Run(":8080")
-	if err != nil {
-		log.Fatal("Start fail")
-	}
-}
-
-func dbConnect() *gorm.DB {
-	db, err := infra.PostgresOpen()
+	dbClient, err := infra.PostgresOpen(context.Background(), cfg)
 	if err != nil {
 		log.Fatal("[main] DB connect error: ", err)
 	}
-	return db
+	server := api.SetupServer(dbClient)
+	infra.Migration(dbClient)
+
+	err = server.Router.Run(":8080")
+	if err != nil {
+		log.Fatal("Start fail")
+	}
 }

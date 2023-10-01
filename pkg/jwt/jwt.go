@@ -1,13 +1,14 @@
 package jwt
 
 import (
+	config "base-gin-go/config/godotenv"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v4"
-	"peanut/config"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 func GenerateToken(userID uint) (string, error) {

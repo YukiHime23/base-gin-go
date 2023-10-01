@@ -1,7 +1,7 @@
 package ary_test
 
 import (
-	"peanut/pkg/ary"
+	"base-gin-go/pkg/ary"
 	"testing"
 )
 

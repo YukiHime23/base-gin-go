@@ -1,12 +1,11 @@
 package response
 
 import (
+	"base-gin-go/models"
+	"base-gin-go/pkg/apierrors"
+	"base-gin-go/pkg/i18n"
 	"errors"
 	"fmt"
-	"peanut/domain"
-
-	"peanut/pkg/apierrors"
-	"peanut/pkg/i18n"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
@@ -19,20 +18,20 @@ func Error(ctx *gin.Context, err error) {
 	}
 	errType := apierrors.ErrType(err)
 
-	ctx.JSON(errType.HTTPCode(), domain.ErrorResponse{
+	ctx.JSON(errType.HTTPCode(), models.ErrorResponse{
 		Code:         errType.Code(),
 		DebugMessage: debugMsg,
 		ErrorDetails: errorDetails(err, ctx.Query("locale")),
 	})
 }
 
-func errorDetails(err error, locale string) (details []domain.ErrorDetail) {
+func errorDetails(err error, locale string) (details []models.ErrorDetail) {
 	var vErrs validator.ValidationErrors
 	if errors.As(err, &vErrs) {
 		fmt.Println("locale: ", locale)
 		trans := i18n.GetTrans(locale)
 		for _, err := range vErrs {
-			details = append(details, domain.ErrorDetail{
+			details = append(details, models.ErrorDetail{
 				Field:     err.Field(),
 				ErrorCode: err.Tag(),
 				// ErrorMessage: err.Error(),
