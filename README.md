@@ -77,10 +77,11 @@ ginkgo ./...
     $ make migratedown step=2
     ```
 
-## Use
+## Used
 - gin-gonic
 - air
 - gorm
 - crypto/bcrypt
 - mockgen 1.6.0
 - jwt v4
+- golang-migrate
