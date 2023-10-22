@@ -6,5 +6,6 @@ import (
 )
 
 type UserServicer interface {
-	GetUser(ctx context.Context, id int) (user *models.User, err error)
+	Login(ctx context.Context, req models.RequestLogin) (string, error)
+	GetUser(ctx context.Context, id int) (*models.User, error)
 }

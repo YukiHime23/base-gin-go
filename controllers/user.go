@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"base-gin-go/models"
 	"base-gin-go/pkg/response"
 	"base-gin-go/services"
 	"strconv"
@@ -23,72 +24,24 @@ func NewUserController(s services.UserServicer) *UserController {
 //	@Tags			Auth
 //	@Accept			json
 //	@Produce		json
-//	@Param			json	body		domain.RequestLogin	true	"Body"
-//	@Success		200		{object}	domain.Response
-//	@Failure		400		{object}	domain.ErrorResponse
-//	@Failure		500		{object}	domain.ErrorResponse
+//	@Param			json	body		models.RequestLogin	true	"Body"
+//	@Success		200		{object}	models.Response
+//	@Failure		400		{object}	models.ErrorResponse
+//	@Failure		500		{object}	models.ErrorResponse
 //	@Router			/login [post]
-// func (c *UserController) Login(ctx *gin.Context) {
-// 	req := domain.RequestLogin{}
-// 	if !bindJSON(ctx, &req) {
-// 		return
-// 	}
-// 	token, err := c.Usecase.Login(ctx, req)
-// 	if checkError(ctx, err) {
-// 		return
-// 	}
-// 	response.OK(ctx, gin.H{
-// 		"token": "Bearer " + token,
-// 	})
-// }
-
-// GetUsers godoc
-//
-//	@Summary		get list users
-//	@Description	get list users
-//	@Tags			User
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	{object}	[]domain.User
-//	@Failure		400	{object}	domain.ErrorResponse
-//	@Failure		404	{object}	domain.ErrorResponse
-//	@Failure		500	{object}	domain.ErrorResponse
-//	@Security		Bearer
-//	@Router			/users [get]
-// func (c *UserController) GetUsers(ctx *gin.Context) {
-// 	users, err := c.Usecase.GetUsers(ctx)
-// 	if checkError(ctx, err) {
-// 		return
-// 	}
-// 	response.OK(ctx, users)
-// }
-
-// CurrentUser godoc
-//
-//	@Summary		Get current user
-//	@Description	Get current user
-//	@Tags			User
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	{object}	domain.User
-//	@Failure		400	{object}	domain.ErrorResponse
-//	@Failure		404	{object}	domain.ErrorResponse
-//	@Failure		500	{object}	domain.ErrorResponse
-//	@Security		BearerAuth
-//	@Router			/users/current [get]
-// func (c *UserController) CurrentUser(ctx *gin.Context) {
-// 	userID, err := jwt.ExtractTokenID(ctx)
-// 	if checkError(ctx, err) {
-// 		return
-// 	}
-
-// 	u, err := c.Usecase.GetUser(ctx, userID)
-// 	if checkError(ctx, err) {
-// 		return
-// 	}
-
-// 	response.OK(ctx, u)
-// }
+func (c *UserController) Login(ctx *gin.Context) {
+	req := models.RequestLogin{}
+	if !bindJSON(ctx, &req) {
+		return
+	}
+	token, err := c.service.Login(ctx, req)
+	if checkError(ctx, err) {
+		return
+	}
+	response.OK(ctx, gin.H{
+		"token": "Bearer " + token,
+	})
+}
 
 // GetUser godoc
 //
@@ -98,10 +51,10 @@ func NewUserController(s services.UserServicer) *UserController {
 //	@Accept			json
 //	@Produce		json
 //	@Param			id	path		int	true	"User ID"
-//	@Success		200	{object}	domain.User
-//	@Failure		400	{object}	domain.ErrorResponse
-//	@Failure		404	{object}	domain.ErrorResponse
-//	@Failure		500	{object}	domain.ErrorResponse
+//	@Success		200	{object}	models.User
+//	@Failure		400	{object}	models.ErrorResponse
+//	@Failure		404	{object}	models.ErrorResponse
+//	@Failure		500	{object}	models.ErrorResponse
 //	@Security		Bearer
 //	@Router			/users/{id} [get]
 func (c *UserController) GetUser(ctx *gin.Context) {
@@ -115,54 +68,3 @@ func (c *UserController) GetUser(ctx *gin.Context) {
 	}
 	response.OK(ctx, user)
 }
-
-// CreateUser godoc
-//
-//	@Summary		create a user
-//	@Description	Create a user
-//	@Tags			User
-//	@Accept			json
-//	@Produce		json
-//	@Param			json	formData	domain.User	true	"Body"
-//	@Success		200		{object}	domain.User
-//	@Failure		400		{object}	domain.ErrorResponse
-//	@Failure		500		{object}	domain.ErrorResponse
-//	@Security		Bearer
-//	@Router			/users [post]
-// func (c *UserController) CreateUser(ctx *gin.Context) {
-// 	user := domain.User{}
-// 	if !bindJSON(ctx, &user) {
-// 		return
-// 	}
-
-// 	err := c.Usecase.CreateUser(ctx, user)
-// 	if checkError(ctx, err) {
-// 		return
-// 	}
-// 	response.OK(ctx, nil)
-// }
-
-// Register godoc
-//
-//	@Summary		register
-//	@Description	register
-//	@Tags			Auth
-//	@Accept			json
-//	@Produce		json
-//	@Param			json	body		object	true	"Body"
-//	@Success		200		{object}	domain.Response
-//	@Failure		400		{object}	domain.ErrorResponse
-//	@Failure		500		{object}	domain.ErrorResponse
-//	@Router			/register [post]
-// func (c *UserController) Register(ctx *gin.Context) {
-// 	user := domain.User{}
-// 	if !bindJSON(ctx, &user) {
-// 		return
-// 	}
-
-// 	err := c.Usecase.CreateUser(ctx, user)
-// 	if checkError(ctx, err) {
-// 		return
-// 	}
-// 	response.OK(ctx, nil)
-// }
